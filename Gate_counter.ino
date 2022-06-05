@@ -1,30 +1,29 @@
-
-#define BLYNK_TEMPLATE_ID "TMPLtjDfaGWl"
-#define BLYNK_DEVICE_NAME "weather station"
+#define BLYNK_TEMPLATE_ID "TMPLtNXxemSD"
+#define BLYNK_DEVICE_NAME "Gate counter"
 
 #define BLYNK_FIRMWARE_VERSION "0.1.0"
 #define BLYNK_PRINT Serial
 #define USE_NODE_MCU_BOARD
 #include "BlynkEdgent.h"
-#include "DHT.h"
-#define DHTPIN D2 
-#define DHTTYPE DHT11
 
-DHT dht(DHTPIN, DHTTYPE);
-float t, h;
+
+ #define sensor D3
+ int counter = 0;
 
 void sendSensor()
 {
-  h = dht.readHumidity();
-  t = dht.readTemperature();  
-  Blynk.virtualWrite(V0, h);
-  Blynk.virtualWrite(V1, t);
-}
+  if(digitalRead(D3)==LOW){
+    counter++;
+    Serial.println(counter);
+    Blynk.virtualWrite(V1, counter);
+    delay(1000);
+  
+}}
 
 void setup()
 {
   Serial.begin(9600);
-  dht.begin();
+ pinMode(sensor , INPUT);
   BlynkEdgent.begin();
   delay(2000); 
   timer.setInterval(1000L, sendSensor); 
